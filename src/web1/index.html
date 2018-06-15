@@ -21,6 +21,7 @@
 
 			function sendMessage() {
 				var message = $('#message').val();
+				showMessage(`sendMessage: ${message}`);
 
 				parent.postMessage({
 					messageId,
