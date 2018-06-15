@@ -1,0 +1,56 @@
+<html>
+
+<head>
+	<script src="./js/jquery.js"></script>
+
+	<script>
+
+		$(function() {
+
+			$('.sessions button').click(function() {
+				createIframe(this.id);
+			});
+
+			addEventListener('message', messageHandler);
+
+			return void (0);
+
+			function createIframe(messageId) {
+				const iframe = document.createElement('iframe');
+				iframe.src = 'http://localhost:8080/index.html?messageId=' + messageId;
+				container.append(iframe);
+			}
+
+			function messageHandler(event) {
+				let data = event.data;
+				let message = `<p>from: ${data.messageId}: ${data.value}</p>`;
+				$(message).appendTo(messages);
+
+				event.source.postMessage({
+					messageId: data.messageId,
+					value: `got: ${data.value}`
+				}, '*');
+			}
+
+		});
+	</script>
+
+</head>
+
+<body>
+	<p>web2</p>
+
+	<div class="sessions">
+		<button id="1">1</button>
+		<button id="2">2</button>
+		<button id="3">3</button>
+		<button id="4">4</button>
+		<button id="5">5</button>
+	</div>
+
+	<div id="container"></div>
+	<div id="messages"></div>
+
+</body>
+
+</html>

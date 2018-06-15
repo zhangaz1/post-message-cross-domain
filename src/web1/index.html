@@ -1,0 +1,71 @@
+<html>
+
+<head>
+	<script src="./js/jquery.js"></script>
+
+	<script>
+
+		$(function() {
+
+			addEventListener('message', messageHandler);
+
+			const messageId = getSearchValue('messageId');
+
+			showMessage(`messageId: ${messageId}`);
+			$('#send').click(sendMessage);
+
+			$('#message').val('I am ' + messageId);
+			sendMessage();
+
+			return void (0);
+
+			function sendMessage() {
+				var message = $('#message').val();
+
+				parent.postMessage({
+					messageId,
+					key: 'hello',
+					value: message
+				}, '*');
+
+				$('#message').val('');
+			}
+
+			function getSearchValue(key) {
+				key = key.toLowerCase();
+
+				const searchs = location.search.substr(1).split('&');
+				for (let search of searchs) {
+					search = search.split('=');
+					if (search[0].toLowerCase() === key) {
+						return search[1];
+					}
+				}
+
+				return;
+			}
+
+			function messageHandler(event) {
+				showMessage(`got replay: ${event.data.value}`);
+			}
+
+			function showMessage(message) {
+				$(`<p>${message}</p>`).appendTo($('#messages'));
+			}
+		});
+	</script>
+</head>
+
+<body>
+	<p>web1</p>
+
+	<div>
+		<input type="text" id="message">
+		<button id="send">send</button>
+	</div>
+
+	<div id="messages"></div>
+
+</body>
+
+</html>
