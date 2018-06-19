@@ -18,12 +18,14 @@
 			function createIframe(messageId) {
 				const iframe = document.createElement('iframe');
 				iframeId = `iframe_${messageId}`;
+				iframe.id = iframeId;
 				iframe.src = 'http://localhost:8080/index.html?messageId=' + messageId;
 				container.append(iframe);
 
-				const frame = $(`#${iframeId}`);
+				const frame = $('#' + iframeId);
 
-
+				window.iframe = iframe;
+				window.frame = frame;
 			}
 
 			function messageHandler(event) {
