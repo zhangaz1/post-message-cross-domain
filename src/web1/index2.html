@@ -1,0 +1,65 @@
+<html>
+
+<head>
+	<script src="./js/jquery.js"></script>
+	<script src="./js/penpal.js"></script>
+
+	<script>
+		$(function() {
+			const connection = Penpal.connectToParent({
+				// Methods child is exposing to parent
+				methods: {
+					getToken() {
+						// Return a promise if the value being returned requires asynchronous processing.
+						return new Promise(resolve => {
+							setTimeout(() => {
+								resolve('token:XXXXX');
+							}, 1000);
+						});
+					},
+					send(message) {
+						const msg = `got message: ${message}`;
+						showMessage(msg);
+
+						return Promise.resolve(msg);
+					}
+				}
+			});
+
+			connection.promise.then(parent => {
+				console.log('parent:', parent);
+
+				const message = $('#message');
+				$('#send').click(function() {
+					const msg = message.val();
+					showMessage(`send: ${msg}`);
+
+					parent.send(msg).then(function(msg) {
+						showMessage(`got reply: ${msg}`);
+					});
+
+					message.val('');
+				});
+			});
+
+			function showMessage(message) {
+				$(`<p>${message}</p>`).appendTo($('#messages'));
+			}
+		});
+	</script>
+</head>
+
+<body>
+
+	<p>web1.page2</p>
+
+	<div>
+		<input type="text" id="message">
+		<button id="send">send</button>
+	</div>
+
+	<div id="messages"></div>
+
+</body>
+
+</html>

@@ -1,0 +1,127 @@
+<html>
+
+<head>
+	<script src="./js/jquery.js"></script>
+	<script src="./js/penpal.js"></script>
+
+	<script>
+
+
+		$(function() {
+
+			$('.sessions button').click(function() {
+				createIframe(this.id);
+			});
+
+			return void (0);
+
+			function createIframe(messageId) {
+				const container = $(`#container_${messageId}`);
+
+				const connection = Penpal.connectToChild({
+					// URL of page to load into iframe.
+					url: 'http://localhost:8080/index2.html',
+					// Container to which the iframe should be appended.
+					appendTo: container.get(0),
+					// Methods parent is exposing to child
+					methods: {
+						send(message) {
+							const msg = `got message: ${message}`;
+							showMessage(container, msg);
+
+							return Promise.resolve(msg);
+						}
+					}
+				});
+
+				connection.promise.then(child => {
+					child.getToken().then(function(token) {
+						console.log('got token:', token, child)
+					});
+
+					const message = container.find('#message');
+					container.find('#send').click(function() {
+						const msg = message.val();
+						showMessage(container, `send: ${msg}`);
+
+						child.send(msg).then(function(msg) {
+							showMessage(container, `got reply: ${msg}`);
+						});
+
+						message.val('');
+					});
+				});
+
+
+
+
+			}
+
+			function showMessage(container, message) {
+				$(`<p>${message}</p>`).appendTo(container.find('#messages'));
+			}
+
+		});
+
+	</script>
+</head>
+
+<body>
+	<p>web2.page2</p>
+
+
+	<div class="sessions">
+		<button id="1">1</button>
+		<button id="2">2</button>
+		<button id="3">3</button>
+		<button id="4">4</button>
+		<button id="5">5</button>
+	</div>
+
+	<div id="containers">
+		<div id="container_1">
+			<p>1</p>
+			<div>
+				<input type="text" id="message">
+				<button id="send">send</button>
+			</div>
+			<div id="messages"></div>
+		</div>
+		<div id="container_2">
+			<p>2</p>
+			<div>
+				<input type="text" id="message">
+				<button id="send">send</button>
+			</div>
+			<div id="messages"></div>
+		</div>
+		<div id="container_3">
+			<p>3</p>
+			<div>
+				<input type="text" id="message">
+				<button id="send">send</button>
+			</div>
+			<div id="messages"></div>
+		</div>
+		<div id="container_4">
+			<p>4</p>
+			<div>
+				<input type="text" id="message">
+				<button id="send">send</button>
+			</div>
+			<div id="messages"></div>
+		</div>
+		<div id="container_5">
+			<p>5</p>
+			<div>
+				<input type="text" id="message">
+				<button id="send">send</button>
+			</div>
+			<div id="messages"></div>
+		</div>
+	</div>
+	<div id="messages"></div>
+
+</body>
+
+</html>
