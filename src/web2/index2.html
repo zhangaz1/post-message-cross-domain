@@ -2,18 +2,26 @@
 
 <head>
 	<script src="./js/jquery.js"></script>
-	<script src="./js/penpal.js"></script>
+	<!-- <script src="./js/penpal.js"></script> -->
+
+	<script src="http://localhost:8080/js/jsLoader.js"></script>
+	<script src="http://localhost:8080/js/loadLibs.js"></script>
 
 	<script>
 
-
 		$(function() {
 
-			$('.sessions button').click(function() {
-				createIframe(this.id);
-			});
+			Promise.resolve()
+				.then(loadLibs)
+				.then(bindSessionsHandler);
 
 			return void (0);
+
+			function bindSessionsHandler() {
+				$('.sessions button').click(function() {
+					createIframe(this.id);
+				});
+			}
 
 			function createIframe(messageId) {
 				const container = $(`#container_${messageId}`);
@@ -51,16 +59,11 @@
 						message.val('');
 					});
 				});
-
-
-
-
 			}
 
 			function showMessage(container, message) {
 				$(`<p>${message}</p>`).appendTo(container.find('#messages'));
 			}
-
 		});
 
 	</script>
