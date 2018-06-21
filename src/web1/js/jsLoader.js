@@ -6,6 +6,7 @@ var JavaScript = {
 			var loaded = false;
 
 			// script.setAttribute('src', src);
+			script.type = 'text/javascript';
 			script.src = src;
 
 			script.onreadystatechange = script.onload = function() {
